@@ -12,13 +12,21 @@ library("AER")
 factors <- read.dta("innovation_factors.dta")
 
 pfs_25 = names(factors)[18:42]
+ind_10 = names(factors)[43:54]
+mom_12 = names(factors)[55:64]
 
 dep_vars = paste('lm', pfs_25, sep='_')
 
 orig_formula <- sl ~ mktrf + hml + smb
 
-new_formula <- lapply(pfs_25, function(x, orig = orig_formula) {
+create_models <- function(x, orig) {
 	new = reformulate(".", x)
-	update(orig, new)})
+	update(orig, new)}
 
-dep_vars <- lapply(new_formula, lm, data=factors)
+# Create the Standard Fama-French three factor model
+ff_formula <- lapply(pfs_25, create_models, orig=orig_formula)
+		     
+
+# Run the 25 FF time series regression
+
+dep_vars <- lapply(ff_formula, lm, data=factors)
