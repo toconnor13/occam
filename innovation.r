@@ -17,16 +17,31 @@ mom_12 = names(factors)[55:64]
 
 dep_vars = paste('lm', pfs_25, sep='_')
 
-orig_formula <- sl ~ mktrf + hml + smb
+model1 <- sl ~ mktrf + hml + smb
+model1 <- sl ~ mktrf
+model2 <- sl ~ mktrf + hml
+model3 <- sl ~ mktrf + smb
+model4 <- sl ~ mktrf + hml + smb
 
-create_models <- function(x, orig) {
+change_dep_var <- function(x, orig) {
 	new = reformulate(".", x)
 	update(orig, new)}
 
+add_ind_var <- function(x, model){
+#	new = reformulate(c())
+}
+
+ts_analysis <- function(portfolios, formula){
+#	dep_vars <- paste('lm', portfolios, sep="_")
+	model_list <- lapply(portfolios, create_models, formula)
+	lapply(model_list, lm, data=factors)}
+
+
+
 # Create the Standard Fama-French three factor model
-ff_formula <- lapply(pfs_25, create_models, orig=orig_formula)
+# ff_formula <- lapply(pfs_25, create_models, orig=orig_formula)
 		     
 
 # Run the 25 FF time series regression
 
-dep_vars <- lapply(ff_formula, lm, data=factors)
+# dep_vars <- lapply(ff_formula, lm, data=factors)
