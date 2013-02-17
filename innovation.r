@@ -15,33 +15,32 @@ pfs_25 = names(factors)[18:42]
 ind_10 = names(factors)[43:54]
 mom_12 = names(factors)[55:64]
 
-dep_vars = paste('lm', pfs_25, sep='_')
+ts(facotrs, start=1927, end=2011, frequency=1)
 
-model1 <- sl ~ mktrf + hml + smb
-model1 <- sl ~ mktrf
-model2 <- sl ~ mktrf + hml
-model3 <- sl ~ mktrf + smb
-model4 <- sl ~ mktrf + hml + smb
+capm_model <- sl ~ mktrf
+hml_model <- sl ~ mktrf + hml
+smb_model <- sl ~ mktrf + smb
+ff3f_model <- sl ~ mktrf + hml + smb
 
-change_dep_var <- function(x, orig) {
-	new = reformulate(".", x)
-	update(orig, new)}
+change_dep_var <- function(new_dep_var, model) {
+	new = reformulate(".", new_dep_var)
+	update(model, new)}
 
-add_ind_var <- function(x, model){
-#	new = reformulate(c())
+add_ind_var <- function(new_var, model){
+	new = reformulate(c(new_var, '.'))
+	update(model, new)
 }
 
-ts_analysis <- function(portfolios, formula){
-#	dep_vars <- paste('lm', portfolios, sep="_")
-	model_list <- lapply(portfolios, create_models, formula)
+ts_analysis <- function(portfolios, formula, factor=NULL){
+	this_formula <- formula
+	if(!missing(factor)){
+	this_formula <- add_ind_var(factor, formula)
+	}
+
+
+	model_list <- lapply(portfolios, change_dep_var, this_formula)
 	lapply(model_list, lm, data=factors)}
 
 
 
-# Create the Standard Fama-French three factor model
-# ff_formula <- lapply(pfs_25, create_models, orig=orig_formula)
-		     
 
-# Run the 25 FF time series regression
-
-# dep_vars <- lapply(ff_formula, lm, data=factors)
