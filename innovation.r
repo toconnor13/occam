@@ -10,12 +10,15 @@ library("foreign")
 library("AER")
 
 factors <- read.dta("innovation_factors.dta")
+N <- length(factors$vc_returns)
+factors$vc_returns_l1 <- c(NA, factors$vc_returns[1:(N-1)])
 
 pfs_25 = names(factors)[18:42]
 ind_10 = names(factors)[43:54]
 mom_12 = names(factors)[55:64]
 
-ts(facotrs, start=1927, end=2011, frequency=1)
+ts(factors, start=1927, end=2011, frequency=1)
+
 
 capm_model <- sl ~ mktrf
 hml_model <- sl ~ mktrf + hml
