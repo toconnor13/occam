@@ -26,6 +26,8 @@ hml_model <- sl ~ mktrf + hml
 smb_model <- sl ~ mktrf + smb
 ff3f_model <- sl ~ mktrf + hml + smb
 
+list_of_models <- c(capm_model, hml_model, smb_model, ff3f_model)
+
 change_dep_var <- function(new_dep_var, model) {
 	new = reformulate(".", new_dep_var)
 	update(model, new)}
@@ -54,16 +56,43 @@ drop_intercept <- function(data){
 	}
 
 
-merge_coef <- function(regression_series, factor_names){
+beta_extract <- function(regression_series){
 	coef_list <- lapply(regression_series, coef)
 	start <- coef_list[[1]]
 	J=length(coef_list)
 	for(i in 2:J){
 		start <- rbind(start, coef_list[[i]])}
+	return(drop_intercept(start))
+	}
+
+add_subscript <- function(beta_set, i){
+	var_names <- colnames(beta_set)
+	paste(var_names, i, sep="_")
+	}
+
+
+all_time_series <- lapply(list_of_models, ts_analysis, portfolios=pfs_25, factor='vc_returns')
+
+# this function can only take betas from a given set of portfolios.  The number/type of factors shouldn't matter.
+merge_all_betas <- function(this_factor, i=0){
+	all_time_series <- lapply(list_of_models, ts_analysis, portfolios=pfs_25, factor=this_factor)
+	start <- beta_extract(all_time_series[[1]])
+	colnames(start) <- add_subscript(start, i)
+	i <- i+1
+	J = length(all_time_series)
+	for(j in 2:J){
+		betas_to_bind <- beta_extract(all_time_series[[j]])
+		colnames(betas_to_bind) <- add_subscript(betas_to_bind, i)
+		i <- i+1
+		start <- cbind(start, betas_to_bind)
+	}
 	return(start)
 	}
 
 
 
+
 t <- ts_analysis(factor='vc_returns')
 # t_coef <- lapply(t, coef)
+
+cs <- merge_all_betas('vc_returns')
