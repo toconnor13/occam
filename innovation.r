@@ -18,11 +18,14 @@ pfs_25 = names(factors)[18:42]
 ind_10 = names(factors)[43:54]
 mom_12 = names(factors)[55:64]
 
-
 capm_model <- sl ~ mktrf
 hml_model <- sl ~ mktrf + hml
 smb_model <- sl ~ mktrf + smb
 ff3f_model <- sl ~ mktrf + hml + smb
+
+pfs_25_matrix <- as.matrix(factors)[,18:42]
+
+pfs25_means <- colMeans(pfs_25_matrix)
 
 list_of_models <- c(capm_model, hml_model, smb_model, ff3f_model)
 
@@ -112,6 +115,8 @@ all_cs_results <- function(list_of_factors){
 	}
 
 all_cs <- all_cs_results(candidate_factors)
-cs_data <- data.frame(all_cs)
+cs_data_less_means <- data.frame(all_cs)
+cs_data <- cbind(pfs25_means, cs_data_less_means)
+
 write.dta(cs_data, file="cs_data.dta")
 write(cs_data, file="cs_data")
