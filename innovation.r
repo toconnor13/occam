@@ -18,8 +18,6 @@ pfs_25 = names(factors)[18:42]
 ind_10 = names(factors)[43:54]
 mom_12 = names(factors)[55:64]
 
-# ts(factors, start=1927, end=2011, frequency=1)
-
 
 capm_model <- sl ~ mktrf
 hml_model <- sl ~ mktrf + hml
@@ -47,7 +45,6 @@ ts_analysis <- function(portfolios=pfs_25, formula=hml_model, factor=NULL){
 	model_list <- lapply(portfolios, change_dep_var, this_formula)
 	lapply(model_list, lm, data=factors)}
 
-# all_time_series <- lapply(candidate_factors, ts_analysis, portfolios=pfs_25, formula=hml_model)
 
 drop_intercept <- function(data){
 	colnames(data)[1] <- 'intercept'
@@ -74,7 +71,7 @@ add_subscript <- function(beta_set, i){
 all_time_series <- lapply(list_of_models, ts_analysis, portfolios=pfs_25, factor='vc_returns')
 
 # this function can only take betas from a given set of portfolios.  The number/type of factors shouldn't matter.
-merge_all_betas <- function(this_factor, i=0){
+merge_betas_for_factor <- function(this_factor, i=0){
 	all_time_series <- lapply(list_of_models, ts_analysis, portfolios=pfs_25, factor=this_factor)
 	start <- beta_extract(all_time_series[[1]])
 	colnames(start) <- add_subscript(start, i)
@@ -93,6 +90,23 @@ merge_all_betas <- function(this_factor, i=0){
 
 
 t <- ts_analysis(factor='vc_returns')
-# t_coef <- lapply(t, coef)
 
-cs <- merge_all_betas('vc_returns')
+cs <- merge_betas_for_factor('vc_returns')
+
+# Merge all betas for different factors
+
+all_cs_results <- function(list_of_factors){
+	start <- merge_betas_for_factor(list_of_factors[0])
+	m <- 1
+	J = length(list_of_factors)
+	for(j in 2:J ){
+		start <- cbind(start, merge_betas_for_factor(list_of_factors[j], m))
+		m <- m + 1	
+	}
+	return(start)
+	}
+
+all_cs <- all_cs_results(candidate_factors)
+cs_data <- data.frame(all_cs)
+write.dta(cs_data, file="cs_data.dta")
+write(cs_data, file="cs_data")
