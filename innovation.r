@@ -31,7 +31,7 @@ change_dep_var <- function(new_dep_var, model) {
 	update(model, new)}
 
 add_ind_var <- function(new_var, model){
-	new = reformulate(c(new_var, '.'))
+	new = reformulate(c('.', new_var))
 	update(model, new)
 }
 
@@ -62,25 +62,30 @@ beta_extract <- function(regression_series){
 	return(drop_intercept(start))
 	}
 
-add_subscript <- function(beta_set, i){
+count <- 0
+
+add_subscript <- function(beta_set){
 	var_names <- colnames(beta_set)
-	paste(var_names, i, sep="_")
+	thing = paste(var_names, count, sep="_")
+	count <<- count + 1
+	return(thing)
 	}
 
 
 all_time_series <- lapply(list_of_models, ts_analysis, portfolios=pfs_25, factor='vc_returns')
 
 # this function can only take betas from a given set of portfolios.  The number/type of factors shouldn't matter.
-merge_betas_for_factor <- function(this_factor, i=0){
+merge_betas_for_factor <- function(this_factor, k=0){
 	all_time_series <- lapply(list_of_models, ts_analysis, portfolios=pfs_25, factor=this_factor)
 	start <- beta_extract(all_time_series[[1]])
-	colnames(start) <- add_subscript(start, i)
-	i <- i+1
+	colnames(start) <- add_subscript(start)
+#	k <- k+1
 	J = length(all_time_series)
 	for(j in 2:J){
 		betas_to_bind <- beta_extract(all_time_series[[j]])
-		colnames(betas_to_bind) <- add_subscript(betas_to_bind, i)
-		i <- i+1
+		colnames(betas_to_bind) <- add_subscript(betas_to_bind)
+#		k <- k+1
+#		count <<- count + 1
 		start <- cbind(start, betas_to_bind)
 	}
 	return(start)
@@ -100,7 +105,7 @@ all_cs_results <- function(list_of_factors){
 	m <- 1
 	J = length(list_of_factors)
 	for(j in 2:J ){
-		start <- cbind(start, merge_betas_for_factor(list_of_factors[j], m))
+		start <- cbind(start, merge_betas_for_factor(list_of_factors[j], k=m))
 		m <- m + 1	
 	}
 	return(start)
