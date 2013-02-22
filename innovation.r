@@ -10,9 +10,10 @@ library("foreign")
 library("AER")
 
 factors <- read.dta("innovation_factors.dta")
-candidate_factors <- names(factors)[6:17]
 N <- length(factors$vc_returns)
 factors$vc_returns_l1 <- c(NA, factors$vc_returns[1:(N-1)])
+
+candidate_factors <- c(names(factors)[6:17], "vc_returns_l1")
 
 pfs_25 = names(factors)[18:42]
 ind_10 = names(factors)[43:54]

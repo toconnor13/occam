@@ -1,6 +1,7 @@
 use "Z:\home\sheefrex\code\occam\cs_data.dta", clear
 
-cd "Z:\home\sheefrex\code\occam", clear
+cd "Z:\home\sheefrex\code\occam"
+est clear
 
 eststo: reg pfs25_means mktrf_4
 eststo: reg pfs25_means mktrf_5 hml_5 
@@ -102,6 +103,14 @@ eststo: reg pfs25_means mktrf_50 smb_50 g_fund_no_50
 eststo: reg pfs25_means mktrf_51 hml_51 smb_51 g_fund_no_51
 
 esttab using cs9.tex, ar2 compress booktabs title(Cross Sectional Estimates - Growth in Number of Venture Capital Funds \label{tab1})  
+est clear
+
+eststo: reg pfs25_means  mktrf_52 vc_returns_l1_52 
+eststo: reg pfs25_means mktrf_53 hml_53 vc_returns_l1_53 
+eststo: reg pfs25_means  mktrf_54 smb_54 vc_returns_l1_54 
+eststo: reg pfs25_means mktrf_55 hml_55 smb_55 vc_returns_l1_55
+
+esttab using cs10.tex, ar2 compress booktabs title(Cross Sectional Estimates - Growth in Number of Venture Capital Funds \label{tab1})  
 est clear
 
 clear
