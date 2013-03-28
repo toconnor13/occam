@@ -8,10 +8,19 @@ rm(list=ls())
 
 library("foreign")
 library("AER")
+require(ggplot2)
 
 factors <- read.dta("innovation_factors.dta")
 N <- length(factors$vc_returns)
 factors$vc_returns_l1 <- c(NA, factors$vc_returns[1:(N-1)])
+
+# Multiply the growth rates by 100 to get them int terms of percentage points
+
+factors$g_ipo <- factors$g_ipo*100
+factors$g_fund_no <- factors$g_fund_no*100
+
+# Save the manipulated data for graphing later
+fin_factors <- write.dta(factors, "final_factors.dta")
 
 candidate_factors <- c(names(factors)[6:17], "vc_returns_l1")
 
