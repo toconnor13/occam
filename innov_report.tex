@@ -1,0 +1,340 @@
+\documentclass[12pt]{article}
+
+\usepackage{graphicx}
+\usepackage{upgreek}
+\usepackage{booktabs}
+\usepackage[a4paper]{geometry}
+%\usepackage{a4wide}
+\usepackage{natbib}
+\usepackage{setspace}
+\usepackage[font={bf}]{caption}
+\doublespacing
+
+\usepackage{listings} % Required for inserting code snippets
+\usepackage[usenames,dvipsnames]{color} % Required for specifying custom colors and referring to colors by name
+
+\definecolor{DarkGreen}{rgb}{0.0,0.4,0.0} % Comment color
+\definecolor{highlight}{RGB}{255,251,204} % Code highlight color
+
+\lstdefinestyle{Style1}{ % Define a style for your code snippet, multiple definitions can be made if, for example, you wish to insert multiple code snippets using different programming languages into one document
+language=Perl, % Detects keywords, comments, strings, functions, etc for the language specified
+backgroundcolor=\color{highlight}, % Set the background color for the snippet - useful for highlighting
+basicstyle=\footnotesize\ttfamily, % The default font size and style of the code
+breakatwhitespace=false, % If true, only allows line breaks at white space
+breaklines=true, % Automatic line breaking (prevents code from protruding outside the box)
+captionpos=b, % Sets the caption position: b for bottom; t for top
+commentstyle=\usefont{T1}{pcr}{m}{sl}\color{DarkGreen}, % Style of comments within the code - dark green courier font
+deletekeywords={}, % If you want to delete any keywords from the current language separate them by commas
+%escapeinside={\%}, % This allows you to escape to LaTeX using the character in the bracket
+firstnumber=1, % Line numbers begin at line 1
+frame=single, % Frame around the code box, value can be: none, leftline, topline, bottomline, lines, single, shadowbox
+frameround=tttt, % Rounds the corners of the frame for the top left, top right, bottom left and bottom right positions
+keywordstyle=\color{Blue}\bf, % Functions are bold and blue
+morekeywords={}, % Add any functions no included by default here separated by commas
+numbers=left, % Location of line numbers, can take the values of: none, left, right
+numbersep=10pt, % Distance of line numbers from the code box
+numberstyle=\tiny\color{Gray}, % Style used for line numbers
+rulecolor=\color{black}, % Frame border color
+showstringspaces=false, % Don't put marks in string spaces
+showtabs=false, % Display tabs in the code as lines
+stepnumber=5, % The step distance between line numbers, i.e. how often will lines be numbered
+stringstyle=\color{Purple}, % Strings are purple
+tabsize=2, % Number of spaces per tab in the code
+}
+
+% Create a command to cleanly insert a snippet with the style above anywhere in the document
+\newcommand{\insertcode}[2]{\begin{itemize}\item[]\lstinputlisting[caption=#2,label=#1,style=Style1]{#1}\end{itemize}} % The first argument is the script location/filename and the second is a caption for the listing
+
+%----------------------------------------------------------------------------------------
+
+
+\begin{document}
+\title{Is the Risk of Creative Destruction Priced in the Financial Markets?}
+\author{Tony O'Connor \\
+   09383581\\
+   oconnot3@tcd.ie}
+\date{\today}
+
+
+
+\maketitle
+
+\section{Introduction}
+The failure of the Capital Asset Pricing Model to account for the cross-sectional stock returns has long been remarked upon.  \cite{fama1992} found that size, earnings-price, debt-equity and book-to-market ratios are significant determinants of stock returns, contradicting the CAPM prediction the returns depend only on the excess return of the market portfolio. 
+
+This finding that size and book-to-market ratios can affect the stochastic behaviour of earnings led Fama and French to develop the Three-Factor Model, in which returns depend on the excess return of the market portfolio, and the HML and SMB factors. HML represents the return on a portfolio long in high-growth stocks and short in low-growth stocks, thereby capturing the variation in book-to-market ratios). SMB represents the return on a portfolio long in small capitalisation stocks and short in large company stocks \cite{grammig2010}.
+
+However, HML and SMB are problematic, as they fail to pin down which macroeconomic or state variables causing this common variation in returns which is independent of the market and carries a different premium from market risk \citep{famafrench1993}. As HML/SMB do not represent any underlying macroeconomic variable, their inclusion is arbitrary and motivated by empirical experience; they thus have no role in asset pricing theory \citep{fama1992}.  
+
+Efforts have been made to identify this underlying macroeconomic risk.  A study this paper will focus on reviewing is that of \citet{grammig2010}, who posit that innovation, or creative destruction, is the risk factor that is represented by HML and SMB; they find that patent growth, representing innovation, is a highly significant risk factor to aggregate stock returns. 
+
+This paper widens their approach, and extends the analysis to other variables linked to innovation; the rate of return on venture capital, growth in initial public offerings, and growth in the number of venture capital funds. The intuition behind analysing venture capital (VC) as a proxy for invention is that while patents may account for the creation of technology, the technology needs to be commercialised before it can displace incumbent firms; while \cite{grammig2010} may capture the creation, commercialisation and hence venture capital is needed to ensure destruction.
+
+We find that returns to venture capital has significant pricing power, and has a similar effect to patent growth in that high VC returns represent a displacement risk to both small and low-growth firms. While high levels of venture capital returns represent an aggregate negative payoff to stocks, we find that growth in the number of IPOs and VC funds has the opposite effect. Nevertheless, from the time-series analysis we will see that increasing amounts of venture capital disbursement tend to have negative effect on small-firms only, while high growth in the number of IPOs negatively affect only large firms.
+
+This essay proceeds as follows. Firstly, we will look at the prior literature on the relationship between innovation and fundamental asset risk, and the relation between venture capital and innovation. Then, we will outline the empirical approach, along with a description of the dataset.  We will then analyse the empirical results, and conclude with comment on possible extensions.
+
+\section{Literature Review and Interpretation}
+
+
+		In reaction to the failure of the CAPM model to explain adequately the cross-section of stock returns, Fama and French developed the Three-Factor Model. The model generally has strong predictive power; $R^2$'s in the range of 0.80 are common.  However, the HML and SMB factors fail to identify the fundamental risk that requires a higher return on small and/or low-growth assets.
+
+		\subsection{HML and SMB as Proxies for Creative-Destructive Risk}  
+
+		HML and SML capture the pattern whereby firms that are small in size, or have a high book-to-market value, tend to earn greater returns than those predicted by CAPM. The implication here is that these firms face a risk that is not faced by the average or representative firm. Though the aggregate macroeconomic risk represented by these factors has not been identified theoretically, various efforts have been made to identify it empirically. 
+
+		\citet{grammig2010} support the view that HML and SMB proxy for the risk of creative destruction. \citet{helpman1994} describe creative destruction is the process by which economic growth is caused by the creation and improvement of general purpose technologies, such as the steam engine, electricity or microelectronics. They develop a model in which growth occurs through two-stage cycles. The first stage is marked by slow-growth; the innovation has been discovered, but not enough complementary products have been developed that enable it to deliver productivity gains. Such complements are created by the second-stage, which is consequently marked by high growth rates.
+
+		 We can say that a firm is creatively destroyed if a new product is invented that displaces the incumbent from their market. In this framework, the firms most at risk from creative destruction are small firms, with a high-book-to-market value; exactly the characteristics HMl and SMB capture. HML and SMB thus represent the premium investors require to invest in these risky firms.
+
+		This view can be supported by a number of prior studies. For example, \citet{chanchen1991} find that firms with a low market value and a high book-to-market ratio are firms under distress, are less productive, and thus have a higher probability of default. This implies that such marginal firms would be unable to cope with further competition from new products, which emerge over time.
+
+		In addition, \citet{liew2000} find that HML and SMB contain significant information about future GDP growth; their study shows that HML and SMB can forecast future economic growth in some countries, even with other common business-cycle variables included in the regressions. \citet{vassalou2003} concludes that the HML and SMB factors seem to represent mostly information related to future GDP growth. This finding supports the view that technological progress, which raises future economic growth, is related to the HML and SMB factors. This is also in line with \citet{hsu2009}, who find that technological innovations increase the aggregate level of expected stock returns; more concretely, patent and R+D shocks have positive explanatory power for U.S. returns and risk premia.
+
+
+
+
+		\subsection{Empirical Analysis of Creative-Destructive Risk}
+		
+
+		\cite{grammig2010} propose that creative destruction is the unidentified risk, as technological change is more likely to displace small and value firms. They use patents issued as a proxy for invention growth, and find that a model including market return and and invention growth has large explanatory power for the cross-sectional variation in stock returns, successfully pricing HML and SMB in the process.
+
+		However, their paper has a problem in that it is not entirely correct to say that patent growth prices both HMB and SML; rather the regression conatined in Table 7 regressions clearly imply that patent growth is a fourth factor. The inclusion of patent growth in regressions with SMB and HML never render these latter variables insignificant; if the authors were aware of this, it is not mentioned. Rather, the variable representing the excess return on the market portfolio is rendered insignificant by the inclusion of patent growth. It thus cannot then be said that it prices HML and SMB; the three coexist peacefully in all specifications, so it is a fourth factor.
+
+		\subsubsection{Other Proxies for Creative-Destructive Risk}
+
+		Given that patent growth fails to identify the fundamental risk being HML and SMB, we must turn to other variables that represent innovation or creative destruction. One such variable is venture capital returns. The interpretation here is that if a wave of technological progress is underway, then innovative firms would be expected to do well in the market. Economically, this will first be expressed through high VC returns, as these firms valuations will increase before actual market growth occurs. A study by \citet{nicholas2008} lends credence to the claim that a firm's valuation will accurately reflect the value of its intellectual capital. He found in the U.S. stock market of the 1920's, market values were high as investors were pricing intangible assets such as patents. Using patent citations to identify the technological significance of inventions, his results show that investors were sophisticated in their market pricing decisions. 
+
+		High VC returns may be indicative of the first phase in \cite{helpman1994}'s model, in that the innovation has occurred, but has not yet caused economic growth. Thus, above-average venture capital returns should serve as a risk factor, as it indicates that new firms are performing well, and so should be better placed to displace weak incumbents.
+
+		Secondly, we look at the growth in the number of VC funds as a risk factor. The motivation here is that large amount of funds going into new innovative firms should increase the risk to the marginal firms the new firms intend to displace. In addition, high amounts of VC investment may raise the rate of invention; for example, \cite{lerner1998} find that the amount of venture capital activity increases the rate of patenting significantly, estimating that venture capital accounts for over 15 percent of industrial innovations.  
+
+		Alternatively, \cite{ueda2011} note that TFP or knowledge growth is associated with future venture capital investment; that is, the venture capital investment occurs only after the innovation has already been achieved. Thus, changes in the amount of venture capital disbursed should not significantly raise the risk faced by small and low-growth firms, as it comes after the innovation has already been accomplished.  If these claims are true, we should find that changes in the amount of venture capital should not present a risk to firms susceptible to displacement, as the innovative process has already occurred and should be factored into the price of stocks. 
+
+		However, this does not imply that the returns on venture capital would not serve as a factor. For example, venture capital that is early in the innovation process would earn quite a high return, as new firms displace old firms in the marketplace, acquiring market share in the process. The consequent high return would then cause the rise in the subsequent amount and number of venture capital disbursements, even though the innovative threat has already materialised and been factored into prices. Testing the growth in VC funds as a factor should allow us to determine whether it poses a threat to marginal firms, and thus whether it comes before or after investment.
+
+		Lastly, we will analyse the growth in the number in IPOs as a factor, for reasons similar to growth in the number of VC funds. IPOs may pose a risk factor to marginal firms, in that they may represent the rise of new firms. Alternatively, they may represent the end of the technological revolution, in that the new firms have matured and their effect on other firms has been realised; thus they may no longer be innovative, and therefore not pose a creative-destructive risk. Such a finding would be in line with what \cite{bernstein2012}, who finds that going public leads to a 50 percent decline in innovation. However, in his study this decline is relative to firms who stayed private; the decline in internal innovation occurs as skilled inventors leave the firm, and the productivity of the remaining inventors declines. 
+
+
+
+
+
+\section{Empirical Approach}
+
+In this paper, three variables will be tested to evaluate whether they are risk factors. The three variables are venture capital returns, the number of VC funds, and growth in the number of IPOs. All variables are expressed in terms of percent. Yearly growth rates are taken to demean the upward secular trend in many of these variables. For example, the amount of venture capital disbursed for U.S. manufacturing industries increased steadily, in 1992 dollars, from 13 million in 1965 to 469 million in 1992. A similar trend prevails for growth in the number of VC firms and funds.
+
+We test to see whether these are risk factors through the use of two-pass regressions. First, time series regressions are run, where we calculate the betas corresponding to the dependent variables. For each candidate factor $C$, we estimate four models, for each year i as follows:
+
+\begin{eqnarray}
+r_i     	& = &   \beta ({MKT}_i) + b_c ({C}_i)     			 	\\
+r_i     	& = &   \beta ({MKT}_i) + b_s ({SMB}_i) + b_c ({C}_i)  		\\
+r_i 	  	& = &   \beta ({MKT}_i) + b_h ({HML}_i) + b_c ({C}_i)			\\
+r_i	  		& = &   \beta ({MKT}_i) + b_h ({SMB}_i) + b_h ({HML}_i) + b_c ({C}_i)
+\end{eqnarray}
+
+The betas from the time series regressions are then stored and regressed on the average returns of the 25 portfolios. The result is 4 cross-sectional regression per candidate factor, all of which are given in the appendix.
+
+
+
+\section{Description of the Dataset}
+
+All data relating to the Fama-French factors was taken from Kenneth French's website \citep{french_data}. The data describes the returns on 25 Portfolios Formed on Size and Book-to-Market, with annual average value-weighted returns.  Data on patents granted is taken from the Table of Issue Years and Patent Numbers, provided by the United States Patent and Trademark Office. Data on the amount of venture capital disbursements is taken from \cite{lerner1998}. 
+
+Data on venture capital returns, and the number of venture capital funds, is taken from the U.S. Venture Capital Index and Selected Benchmark Statistics compiled and provided by Cambridge Associates \cite{cambridge_vc_index}. The return data is pooled return on all funds, based on Inception IRR Based on Fund Industry. The number of funds data is the total number of funds in the All Funds category, from where the pooled return described previously was taken. Data on IPOs is taken from statistics compiled by \cite{ritter_ipo_index}.
+
+As explained by \citet{grammign2010}, a long-run, low-frequency dataset is optimal as each of the proxies we use may be subject to measurement error. For example, IPOs or patent approvals may predominatly happen in one part of the year, which would distort our results. In addition, technological waves would occur over a number of years, which annual data can capture well - in effect, we reduce the possibility for error, while not losing any explanatory power.
+
+In our data, the mean market excess return (MKT) is 7.9 percent; this is the equity premium. The premium of a size and value investment strategy id 3.7 percent for SMB and 4.7 percent for HML. VC returns have a mean of 23.2 percent, and it's variance is approximately equal to its mean. The Fund Growth and IPO growth factors have means of 14 and 31.7 percent respectively, and along with the MKT, HML and SMB factors, are considerably volatile.
+
+
+
+
+\begin{figure}
+
+\caption{A List of Independent Variables}
+
+\begin{tabular}{|l|c|r|}
+
+\hline
+	Name & Label & Year Coverage\\
+\hline
+MKT			&  Excess return on the market portfolio & 1927-2011\\
+SMB				&  SMB: Small minus Big & 1927-2011\\
+HML				&  HML: High minus Low & 1927-2011\\
+PAG			&  Growth in patents granted & 1927-2011\\
+VCR		&  Returns to venture capital & 1981-2011\\
+FUNDG		&  Growth in the number of VC funds & 1981-2010\\
+IPOG			&  Growth in the number of IPOs & 1973-2008 \\
+	
+\hline
+\end{tabular}
+\end{figure}
+
+
+\begin{table}[htbp]\centering \caption{Summary statistics \label{sumstat}}
+\begin{tabular}{l c c c c c}\hline\hline
+\multicolumn{1}{c}{\textbf{Variable}} & \textbf{Mean}
+ & \textbf{Std. Dev.}& \textbf{Min.} &  \textbf{Max.} & \textbf{N}\\ \hline
+MKT & 7.935 & 20.843 & -45.44 & 57.2 & 85\\
+SMB & 3.658 & 14.215 & -29.79 & 54.07 & 85\\
+HML & 4.735 & 13.947 & -34.24 & 40.05 & 85\\
+PAG & 2.445 & 7.511 & -16.015 & 25.075 & 84\\
+VCR & 23.264 & 27.645 & -0.930 & 102.96 & 30\\
+FUNDG & 14.0 & 45.9 & -0.656 & 1.545 & 29\\
+IPOG & 31.7 & 107.4 & -0.869 & 4.613 & 31\\
+\hline
+\end{tabular}
+\end{table}
+
+
+
+\begin{table}[htbp]\centering
+\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}
+\caption{Correlation between Factors}
+\begin{tabular}{l*{7}{c}}
+\addlinespace
+\toprule
+          &\multicolumn{1}{c}{MKT}&\multicolumn{1}{c}{SMB}&\multicolumn{1}{c}{HML}&\multicolumn{1}{c}{PAG}&\multicolumn{1}{c}{VCR}&\multicolumn{1}{c}{IPOG}&\multicolumn{1}{c}{FUNDG}\\
+
+\midrule
+MKT 	& 1    		&  			&      	&     		& 			&		&      	\\
+SMB 	& 0.16    	& 1  		&      	&   	  	& 			&		&      	\\
+HML 	& -0.30    	& 0.09  	& 1    	&   	  	& 			&		&      	\\
+PAG 	& -0.12    	& -0.28  	& -0.09 &   1	  	& 			&  		&      	\\
+VCR 	& 0.28    	& -0.23  	& -0.29	&   -0.21  	& 1			&		&      	\\
+IPOG 	& 0.36    	& 0.29  	& -0.04	&   -0.46  	& -0.04		& 1		&      	\\
+FUNDG 	& 0.23  	& 0.11  	& 0.25	&   -0.24  	& 0.08		& 0.60 	& 1    	\\
+
+\addlinespace
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Empirical Results}
+
+Firstly, we will examine the cross-sectional results to see which factors have pricing power.  Then, we will analyse the time-series results to see how these variables price different types of portfolios.
+
+	\subsection{Cross-Sectional Results}
+
+First, to establish a benchmark by which subsequent results may be evaluated, the four models in Table 6 were estimated. We see that the standard CAPM has poor explanatory power, as the $R^2$ is equal to 21.3 percent. With the inclusion of the HML factor, the $R^2$ rises to 61.7 percent, while the SMB factor raises the $R^2$ to just 22.5 percent. It is clear that the SMB factor, without the HML factor, fails to add much explanatory power. Estimating the Fama-French Three Factor Model, which is model (4) in Table 1, we see that it has an $R^2$ of 76.9 percent. Now, we will examine how the addition of each of the candidate factors improve the models previously described.
+
+	\subsubsection{Growth in Patents Granted}
+		The addition of the patent growth factor, PAG, onto the Standard CAPM increases explanatory power to 56.5 percent. The factor is highly significant. With the addition of the HML factor, explanatory power increases to 78.3 percent, and all factors together raises explanatory power to 88.9 percent.  The patent growth factor is highly significant across all models.
+
+		However, as all three - patent growth, HML and SMB - remain significant when included in the same model, the patent growth factor cannot truly be said to price either HML or SMB.
+
+	\subsubsection{Returns on Venture Capital}
+
+	 This factor is significant at the 1 percent level when added to the standard CAPM model, and increases explanatory power increases to 48.2 percent; an increase of 26.9 percent over the CAPM model. When HML is included, venture returns remains significant at the 5 percent level, and model explanatory power increases to 65.8 percent. However, the addition of SMB only raises explanatory power by around 5 percent, while the venture return factor becomes insignificant. As SMB and venture capital returns cannot be simultaneously significant, we can say the venture returns price the risk represented by SMB; albeit weakly, as SMB renders venture capital returns insignificant in both models where they are included together, rather than the other way around.
+
+		The beta loading on venture returns is negative in all regressions. Thus, we can infer that for stocks that a particularly sensitive to TFP shocks, they tend to have lower returns on average.
+ 
+
+	\subsubsection{Growth in the Number of IPOs}
+
+	When the IPO factor is added to the standard CAPM model, it greatly increases the $R^2$ to 72 percent, while the factor is highly significant at the 0.1 percent level. With the addition of HML, model explanatory power increases to 76.7 percent; a modest increase in comparison to the situation where HML is introduced alone into the Standard CAPM. It can therefore be said that IPO has absorbed much of the explanatory power of HML. Interestingly, it seems again the SMB is the risk factor being priced, as both its inclusion in any model renders the IPO factor insignificant. Despite this, the IPO factor adds far greater explanatory power than the SMB factor, as can be seen from the models in Table 1.
+
+	In short, it could be said that IPOG prices SMB, and soaks up much of HML's explanatory power. However, the results, though promising, are not perfect. For example, in specification (2), Table 6, the market return is insignificant, while the constant is significant; both these facts are contrary to standard predictions in asset-pricing theory.
+
+
+
+	\subsubsection{Growth in the Number of VC Funds}
+
+	Growth in the number of VC funds, FUNDG, is meant to proxy for the growth in the level amount of venture capital being invested. It performs well in three of the four specifications. When introduced into the benchmark CAPM, it increases explanatory power to 64 percent, and is highly significant. On introducing the $SML$ factor, the $R^2$ increases to 70.5 percent, and both are significant.  
+Introducing HML when the fund growth factor is already present decreases explanatory power, though both are significant. When all factors are included, FUNDG becomes insignificant. We can thus reach a tentative conclusion that the growth in the number of VC funds partly prices mainly HML, and partly SMB.
+
+	\subsubsection{Other Factors} 
+
+	Some other factors, not reported here, we also tested. When a factor representing the growth in the number of VC firms is added onto the Standard CAPM,  scarcely any explanatory power is added even though the variable is significant at the 1 percent level. It is significant in no other specification. Similarly, the factor representing the growth in VC disbursed is significant in no specification. The low explanatory power of these variables may be due to low year coverage, and the fact that they are limited to venture capital regarding manufacturing industries.
+
+\subsection{Time-series results}
+
+From the above, we see that venture capital returns, growth in the number of VC funds, and growth in the number of IPOs all have significant explanatory power. Using the 25 portfolios sorted on size and book-to-market value, we will examine the effect of these variables on these portfolios, and thereby illustrate further the results of the cross-sectional results.
+
+	\subsubsection{Return to Venture Capital}
+	
+	Firstly, it is clear that high VC returns has a highly negative and significant effect on low-growth firms of all sizes. It is worth noting that the beta point estimates on the five low-growth portfolios have similar point estimates to \cite{grammig2010}, and with far greater statistical significance. Furthermore, it seems that firms experiencing high-growth are more resistant to the risk posed by high VC returns, given the lower and less significant point estimates.
+
+These observations aside, it seems that there is more consistent variation across the Small-Big dimension; in general, the bigger the firm, the less exposed it is to negative risk represented by VC firms. No similar generality can be made across the HML axis. It is in this manner that returns to venture capital are better able to price SMB, as small firms are negatively affected by high VC returns. This finding is consistent with the cross-section result.
+	
+
+	\subsubsection{Growth in the No. of VC Funds and IPOs}
+
+	First, the pattern of betas here indicates that large firms are negatively affected by a high number of IPOs, though the effect is not statistically significant. We also see increased returns for portfolios of smaller firms, and for portfolios of high-growth firms, verifying our finding in the cross-section that IPOs has pricing power for HML and SMB.
+
+Second, there is evidence, significant at the 10 percent level, that high growth in the number of VC funds positively affects portfolios comprised of firms experiencing moderate-to-high growth. In addition, stocks with low book-to-market value are severely and negatively affected by the a high fund growth. Finally, it is perceptible that small firms, other than those of low book-to-market value, seem to do better when fund growth is high. 
+
+From these results, we can interpret from this that growth in the amount of VC invested has some pricing power for both HML and SMB; this is contrary to the cross-sectional results, which indicated that only HML was priced.
+	
+
+\section{Conclusion}
+
+From the above analysis, a number of conclusions may be drawn. First, the returns to venture capital, and growth rates of IPOs and the number of VC funds can all price some of the risk represented by HML and SMB.
+
+High VC returns acts in the manner expected; firms that have the characteristics of marginal firms (small with a low book-to-market value) tends to do very poorly while VC returns are high. Thus, we help confirm the theory that the premium earned by these firms is due to the fact that they are exposed to creative-destructive risk; when technological waves come along, they are the first to be swept away. Thus, investors require a higher return in normal times to compensate for this risk.
+
+Secondly, we see that the IPOs and the number of VC funds in operation have quite a different effect on the returns of the stocks of marginal firms. High numbers of IPOs and VC funds opening imply good returns for small stocks, and high growth stocks, relative to other stocks. This implies that the amount of VC invested and IPOs pose no innovative risk to business. This is consistent with the literature in two ways. First, we verify \cite{bernstein}'s finding that IPOs are not associated with increases in innovation. 
+
+Thirdly, we have perhaps determined that high IPOs and VC fund openings are symptomatic of the second stage in \cite{helpman1994}'s model, in that there is no further innovative risk (or it has already been priced), and that economic growth is high, resulting in good returns for all stocks. That some marginal stocks also do well may be indicative of a `survival dividend', whereby firms that survive, and thereby escaped the high probability of displacement, recoup some of their lost value due to newfound positive sentiment.  
+
+Overall, these results are highly supportive of the fact that HML and SMB represent the risk presented by creative destruction, and also allude to the possibility of time variation in how these variables interact with stock returns. 
+
+\section{Possible Extensions}
+
+To extend this analysis, a number of avenues could be taken.
+
+Firstly, a Generalised Method of Moments estimator could be used which would check the robustness of the results described above; this would be particularly valuable given the borderline significance seen in some of the above regressions.
+
+Secondly, growth in the number of newly-incorporated companies could be examined as a factor, as this may be symptomatic of creative destruction and innovation.
+
+Thirdly, data could be collected over a longer time-period. The data-coverage for the variables on venture capital and IPOs is relatively short when compared to the patent data coverage (30 years versus 84 years). A longer time series would result in more robust results, as a greater sample size reduces the bias and variance in the estimates of the standard OLS estimator.
+
+Fourthly, a wider range of portfolios may be used. In this paper, the only portfolios used were those 25 Portfolios Sorted on Size and Book-to-Market Value. A larger number of portfolios may be used which would strengthen the consistency of the cross-sectional results. Conversely, different types of portfolios may be used, such as those formed according to industry, which would test how broadly these results apply.
+\section{Appendix}
+
+\subsection{Time-series Beta Estimates}
+
+Tables 2, 3 and 4 five the beta estimates for the time series regressions. Dependent variables are the excess market return, and the candidate factor. HML and SMB do not feature in any of the regressions. The test assets used are the 25 portfolios sorted by book-to-market value (horizontally) and size (vertically). 
+
+
+\input{ts_1}
+
+\newpage
+
+
+%\input{cs01}
+% \input{cs02}
+% \input{cs03}
+%\input{cs1}
+% \input{cs2.tex}
+% \input{cs3.tex}
+
+%\input{cs7.tex}
+%\input{cs9.tex} % g_fund_no 
+%\input{cs8.tex} % g_ipo
+% \input{cs4.tex}
+
+
+
+%\input{cs10.tex} % vc_returns_l1
+%\input{cs5.tex} % g_vc_firm
+
+%\input{cs6.tex} % g_vc_amount
+\subsection{Cross-Sectional Estimates}
+\input{reg_tables}
+
+
+
+\newpage
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\section{Code}
+\insertcode{"innovation.r"}{R Code.}
+\insertcode{"innov.do"}{Stata Code.}
+\end{document}
+
+
+
+
