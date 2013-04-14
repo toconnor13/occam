@@ -48,7 +48,7 @@ add_ind_var <- function(new_var, model){
 	update(model, new)
 }
 
-# 
+# This function adds the factor specified to the model provided, and loops through all the portfolios running an OLS on the model specified. 
 ts_analysis <- function(portfolios=pfs_25, formula=hml_model, factor=NULL){
 	this_formula <- formula
 	if(!missing(factor)){
@@ -57,12 +57,14 @@ ts_analysis <- function(portfolios=pfs_25, formula=hml_model, factor=NULL){
 	model_list <- lapply(portfolios, change_dep_var, this_formula)
 	lapply(model_list, lm, data=factors)}
 
+# This model drops the intercept from the list of regressions from the time-series stage.
 drop_intercept <- function(data){
 	colnames(data)[1] <- 'intercept'
 	data_2 <- subset(data, select=-c(intercept))
 	return(data_2)
 	}
 
+# Thsi model takes the output of a given specification, and binds the estimated betas together by row.
 beta_extract <- function(regression_series){
 	coef_list <- lapply(regression_series, coef)
 	start <- coef_list[[1]]
@@ -72,8 +74,10 @@ beta_extract <- function(regression_series){
 	return(drop_intercept(start))
 	}
 
+# Set a count variable
 count <- 0
 
+# Label the rows of betas so we can tell which columns come from the same regression (for the cross-sectional analysis)
 add_subscript <- function(beta_set){
 	var_names <- colnames(beta_set)
 	thing = paste(var_names, count, sep="_")
@@ -84,6 +88,7 @@ add_subscript <- function(beta_set){
 
 all_time_series <- lapply(list_of_models, ts_analysis, portfolios=pfs_25, factor='vc_returns')
 
+# The full program part 1: give this function a factor to test and it will returns all model specifications, for cross-sectional analysis. 
 merge_betas_for_factor <- function(this_factor, k=0){
 	all_time_series <- lapply(list_of_models, ts_analysis, portfolios=pfs_25, factor=this_factor)
 	start <- beta_extract(all_time_series[[1]])
@@ -101,6 +106,7 @@ t <- ts_analysis(factor='vc_returns')
 
 cs <- merge_betas_for_factor('vc_returns')
 
+# The full program; give it a list of factors and it will return a cross-sectional dataset to run regressions on.
 all_cs_results <- function(list_of_factors){
 	start <- merge_betas_for_factor(list_of_factors[0])
 	m <- 1
