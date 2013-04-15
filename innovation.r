@@ -120,7 +120,7 @@ all_cs_results <- function(list_of_factors){
 
 all_cs <- all_cs_results(candidate_factors)
 cs_data_less_means <- data.frame(all_cs)
-cs_data <- cbind(pfs25_means, cs_data_less_means)
-
+# Write the data to a file for use in stata.
 write.dta(cs_data, file="cs_data.dta")
+
 write(cs_data, file="cs_data")
